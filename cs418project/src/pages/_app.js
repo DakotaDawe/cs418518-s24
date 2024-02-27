@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 
-import NavBar from "../components/navBar/navBar";
+import NavBar from "../components/navBar";
 import { UserContext } from "@/lib/context";
 import { auth, firestore } from "@/lib/firebase";
 import { useUserData } from "@/lib/hooks";
