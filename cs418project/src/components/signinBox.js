@@ -45,34 +45,32 @@ const SigninBox = () => {
 	}
 
 	const signIn = async () => {
-		try {
-			const result = await canUserSignIn();
-			setEmail("");
-			setPassword("");
-			switch (result) {
-				case canSignInResult.NotVerified: toast.error('Could not sign in, Not Verified'); console.log("Cannot sign in, not verified: " + email); return;
-				case canSignInResult.InvalidEntry: toast.error('Could not sign in, Invalid Email or Password'); console.log("Cannot sign in, Invalid Email/Password: " + email); return;
-			}
+		const result = await canUserSignIn();
+		setEmail("");
+		setPassword("");
+		switch (result) {
+			case canSignInResult.NotVerified: toast.error('Could not sign in, Not Verified'); console.log("Cannot sign in, not verified: " + email); return;
+			case canSignInResult.InvalidEntry: toast.error('Could not sign in, Invalid Email or Password'); console.log("Cannot sign in, Invalid Email/Password: " + email); return;
+		}
 
-			await signInWithEmailAndPassword(auth, email, password).then(() => {
-				if (result == canSignInResult.Verified) {
-					toast.success('Signed in as User');
-					setTimeout(() => {
-						router.push('/userHome');
-					}, 1500);
-				} else if (result == canSignInResult.Admin) {
-					toast.success('Signed in as Admin');
-					setTimeout(() => {
-						router.push('/adminVerifyUsers');
-					}, 1500);
-				}
-			});
-		} catch (error) {
+		await signInWithEmailAndPassword(auth, email, password).then(() => {
+			if (result == canSignInResult.Verified) {
+				toast.success('Signed in as User');
+				setTimeout(() => {
+					router.push('/userHome');
+				}, 1500);
+			} else if (result == canSignInResult.Admin) {
+				toast.success('Signed in as Admin');
+				setTimeout(() => {
+					router.push('/adminVerifyUsers');
+				}, 1500);
+			}
+		}).catch((error) => {
 			switch (error.code) {
 				case "auth/invalid-credential": toast.error('Could not sign in, Invalid Email or Password'); break;
 			}
 			console.error("SignIn: " + error);
-		}
+		});
 	}
 
 	return (

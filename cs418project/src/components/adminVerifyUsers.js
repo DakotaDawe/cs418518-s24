@@ -14,8 +14,6 @@ const AdminVerifyUsers = () => {
         if (userData.isAdmin) {
             console.log("USER IS ADMIN SHOWING VERIFIED USERS");
             getUnverifiedUsers();
-        } else {
-            console.error("USER IS NOT ADMIN NOT SHOWING VERIFIED USERS");
         }
     }, [userData]);
 
