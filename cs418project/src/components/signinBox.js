@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { auth, firestore } from '@/lib/firebase';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { collection, getDocs, doc } from 'firebase/firestore';
-import { useContext } from 'react';
-import { UserContext } from '@/lib/context';
 import { toast } from "react-hot-toast";
+import { useRouter } from 'next/router';
 
 const SigninBox = () => {
-	const { user, userData } = useContext(UserContext);
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const router = useRouter();
 
 	const canSignInResult = {
+		InvalidEntry: -1,
 		NotVerified: 0,
 		Verified: 1,
 		Admin: 2
@@ -23,9 +23,11 @@ const SigninBox = () => {
 			const db = firestore;
 			const snapshot = await getDocs(collection(db, "users"));
 			const foundDocs = snapshot.docs;
+			let foundEntry = false;
 			for (let i = 0; i < foundDocs.length; i++) {
 				const foundDoc = foundDocs[i];
 				if (foundDoc.data().email == email) {
+					foundEntry = true;
 					if (foundDoc.data().isAdmin) {
 						return canSignInResult.Admin;
 					}
@@ -34,7 +36,8 @@ const SigninBox = () => {
 					}
 				}
 			}
-			return canSignInResult.NotVerified;
+
+			return foundEntry ? canSignInResult.NotVerified : canSignInResult.InvalidEntry;
 		} catch (err) {
 			console.error("canUserSignIn: " + err);
 			return canSignInResult.NotVerified;
@@ -44,22 +47,31 @@ const SigninBox = () => {
 	const signIn = async () => {
 		try {
 			const result = await canUserSignIn();
-			if (result != canSignInResult.NotVerified) {
-				await signInWithEmailAndPassword(auth, email, password).then(() => {
-					if (result == 1) {
-						toast.success('Signed in as User');
-						window.location.href = "/userHome";
-					} else if (result == 2) {
-						toast.success('Signed in as Admin');
-						window.location.href = "/adminVerifyUsers";
-					}
-				});
-			} else {
-				toast.error('Could not sign in, Not Verified or User does not exist');
-				console.log("Cannot sign in, not verified: " + email);
+			setEmail("");
+			setPassword("");
+			switch (result) {
+				case canSignInResult.NotVerified: toast.error('Could not sign in, Not Verified'); console.log("Cannot sign in, not verified: " + email); return;
+				case canSignInResult.InvalidEntry: toast.error('Could not sign in, Invalid Email or Password'); console.log("Cannot sign in, Invalid Email/Password: " + email); return;
 			}
-		} catch (err) {
-			console.error("SignIn: " + err);
+
+			await signInWithEmailAndPassword(auth, email, password).then(() => {
+				if (result == canSignInResult.Verified) {
+					toast.success('Signed in as User');
+					setTimeout(() => {
+						router.push('/userHome');
+					}, 2000);
+				} else if (result == canSignInResult.Admin) {
+					toast.success('Signed in as Admin');
+					setTimeout(() => {
+						router.push('/adminVerifyUsers');
+					}, 2000);
+				}
+			});
+		} catch (error) {
+			switch (error.code) {
+				case "auth/invalid-credential": toast.error('Could not sign in, Invalid Email or Password'); break;
+			}
+			console.error("SignIn: " + error);
 		}
 	}
 
@@ -83,6 +95,7 @@ const SigninBox = () => {
 							type="email"
 							autoComplete="email"
 							required
+							value={email}
 							className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 
 								placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 							onChange={(e) => {
@@ -105,6 +118,7 @@ const SigninBox = () => {
 							type="password"
 							autoComplete="current-password"
 							required
+							value={password}
 							className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 
 								placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 							onChange={(e) => {

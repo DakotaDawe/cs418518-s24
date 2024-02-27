@@ -3,6 +3,7 @@ import { auth, firestore } from '@/lib/firebase';
 import { UserContext } from "@/lib/context";
 import { createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { setDoc, doc } from 'firebase/firestore';
+import { toast } from 'react-hot-toast';
 
 const SignupBox = () => {
 	const [email, setEmail] = useState("");
@@ -28,14 +29,25 @@ const SignupBox = () => {
 	}
 
 	const submit = async () => {
-		try {
-			await createUserWithEmailAndPassword(auth, email, password).then(() => {
-				console.log("createUserWithEmailAndPassword: " + auth.currentUser.uid);
-				addUserToDatabase();
-			});
-		} catch (err) {
-			console.error("submit: " + err);
-		}
+		await createUserWithEmailAndPassword(auth, email, password).then(() => {
+			console.log("createUserWithEmailAndPassword: " + auth.currentUser.uid);
+			toast.success('Account Creation Successful');
+			addUserToDatabase();
+			setEmail("");
+			setPassword("");
+		}).catch((error) => {
+			switch (error.code) {
+				case 'auth/weak-password':
+					toast.error('Weak Password, ensure length is atleast 6 characters');
+					break;
+				case 'auth/email-already-in-use':
+					toast.error('Email already in use');
+					setEmail("");
+					setPassword("");
+					break;
+			}
+			console.error("submit: " + error);
+		});
 	}
 
 	return (
@@ -57,6 +69,7 @@ const SignupBox = () => {
 							name="email"
 							type="email"
 							autoComplete="email"
+							value={email}
 							required
 							className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 
 								placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -79,6 +92,7 @@ const SignupBox = () => {
 							name="password"
 							type="password"
 							autoComplete="current-password"
+							value={password}
 							required
 							className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 
 								placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

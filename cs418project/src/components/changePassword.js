@@ -17,14 +17,27 @@ const ChangePassword = () => {
 				console.log("onChangePassword: PASSWORDS ARE EQUAL");
 				updatePassword(user, newPassword).then(() => {
 					// Update successful.
-				}).catch((error) => {
+                    toast.success('Password Changed');
+                    setNewPassword("");
+                    setConfirmNewPassword("");
+                    setTimeout(() => {
+                        toast.success("Successful Password Change");
+                    }, 2000);
+				}).catch(async (error) => {
 					switch (error.code) {
 						case 'auth/requires-recent-login':
 							toast('Login must be recent to change password. Login again');
-							window.location.href = "/signin";
+                            setTimeout(() => {
+                                window.location.href = "/signin";
+                            }, 2000);
+							break;
+                        case 'auth/weak-password':
+							toast('Weak Password, ensure length is atleast 6 characters');
 							break;
 					}
 					console.error("onChangePassword: " + error.code);
+                    setNewPassword("");
+                    setConfirmNewPassword("");
 				});
 			} else {
 				console.log("onChangePassword: PASSWORDS ARE NOT EQUAL");
@@ -49,7 +62,8 @@ const ChangePassword = () => {
 						<input
 							id="newPassword"
 							name="newPassword"
-							type="newPassword"
+							type="password"
+                            value={newPassword}
 							required
 							className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 
 								placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -67,7 +81,8 @@ const ChangePassword = () => {
 						<input
 							id="confirmNewPassword"
 							name="confirmNewPassword"
-							type="confirmNewPassword"
+							type="password"
+                            value={confirmNewPassword}
 							required
 							className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 
 								placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

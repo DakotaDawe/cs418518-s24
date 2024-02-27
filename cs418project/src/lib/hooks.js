@@ -17,7 +17,7 @@ export function useUserData() {
                     email: docUserData.data().email
                 });
                 unsubscribe = true;
-                console.log("useUserData: " + docUserData.data().email + "  isAdmin: " + userData.isAdmin);
+                console.log("useUserData: " + docUserData.data().email + "  isAdmin: " + docUserData.data().isAdmin);
             });
         } else {
             setUserData({
