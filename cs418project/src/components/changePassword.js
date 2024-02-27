@@ -40,6 +40,7 @@ const ChangePassword = () => {
                     setConfirmNewPassword("");
 				});
 			} else {
+				toast.error('Passwords do not match');
 				console.log("onChangePassword: PASSWORDS ARE NOT EQUAL");
 			}
 		}
