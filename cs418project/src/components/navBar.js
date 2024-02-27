@@ -23,7 +23,6 @@ const NavBar = () => {
                                         </>
                                         :
                                         <>
-                                            <p>NOT ADMIN</p>
                                         </>
                                 }
                                 <li><Link href="/userHome">Profile</Link></li>

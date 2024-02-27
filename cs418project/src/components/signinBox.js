@@ -59,12 +59,12 @@ const SigninBox = () => {
 					toast.success('Signed in as User');
 					setTimeout(() => {
 						router.push('/userHome');
-					}, 2000);
+					}, 1500);
 				} else if (result == canSignInResult.Admin) {
 					toast.success('Signed in as Admin');
 					setTimeout(() => {
 						router.push('/adminVerifyUsers');
-					}, 2000);
+					}, 1500);
 				}
 			});
 		} catch (error) {
@@ -134,28 +134,6 @@ const SigninBox = () => {
 				text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 						onClick={signIn}>
 						Sign in
-					</button>
-				</div>
-				<div>
-					<button
-						className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 
-				text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-						onClick={async () => {
-							if (auth.currentUser) {
-								console.log("Logged In: " + auth.currentUser.email);
-							} else {
-								console.log("NOT LOGGED IN");
-							}
-						}}>
-						Test Logged In
-					</button>
-				</div>
-				<div>
-					<button
-						className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 
-				text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-						onClick={() => { signOut(auth) }}>
-						Log Out
 					</button>
 				</div>
 			</div>

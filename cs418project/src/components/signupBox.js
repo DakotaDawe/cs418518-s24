@@ -13,8 +13,9 @@ const SignupBox = () => {
 		try {
 			console.log("addUserToDatabase: " + auth.currentUser.uid);
 			const db = firestore;
-			const docRef = doc(db, "users", auth.currentUser.uid);
+			const docRef = doc(db, "users", auth.currentUser.email);
 			await setDoc(docRef, {
+				uid: auth.currentUser.uid,
 				email: email,
 				isAdmin: false,
 				isVerified: false
@@ -45,6 +46,7 @@ const SignupBox = () => {
 					setEmail("");
 					setPassword("");
 					break;
+				default: toast.error(error.code);
 			}
 			console.error("submit: " + error);
 		});

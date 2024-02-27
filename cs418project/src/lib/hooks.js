@@ -10,7 +10,7 @@ export function useUserData() {
     useEffect(() => {
         let unsubscribe;
         if (user) {
-            getDoc(doc(firestore, "users", user.uid)).then((docUserData) => {
+            getDoc(doc(firestore, "users", user.email)).then((docUserData) => {
                 setUserData({
                     isVerified: docUserData.data().isVerified,
                     isAdmin: docUserData.data().isAdmin,
