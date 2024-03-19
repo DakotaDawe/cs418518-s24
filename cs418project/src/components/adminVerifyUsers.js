@@ -11,19 +11,19 @@ const AdminVerifyUsers = () => {
     const [unverifiedUsers, setUnverifiedUsers] = useState([]);
 
     useEffect(() => {
-        if (userData.isAdmin) {
+        if (userData.IsAdmin) {
             console.log("USER IS ADMIN SHOWING VERIFIED USERS");
             getUnverifiedUsers();
         }
     }, [userData]);
 
     const getUnverifiedUsers = async () => {
-        if (userData.isAdmin) {
+        if (userData.IsAdmin) {
             const db = firestore;
             await getDocs(collection(db, "users")).then((snapshot) => {
                 var allUnverifiedUsers = [];
                 snapshot.forEach((doc) => {
-                    if (!doc.data().isVerified) {
+                    if (!doc.data().IsVerified) {
                         allUnverifiedUsers.push({ uid: doc.id, data: doc.data() });
                         console.log("User Added: ID: " + doc.id + " Data: " + doc.data());
                     }
@@ -42,9 +42,9 @@ const AdminVerifyUsers = () => {
         try {
             const db = firestore;
             const docRef = doc(db, "users", uid);
-            var docSnap = await getDoc(docRef);
+            const docSnap = await getDoc(docRef);
             var data = docSnap.data();
-            data.isVerified = true;
+            data.IsVerified = true;
             await setDoc(docRef, data).then(() => {
                 getUnverifiedUsers();
                 console.log("Verifying: " + uid + " data: " + JSON.stringify(data));

@@ -12,12 +12,14 @@ export function useUserData() {
         if (user) {
             getDoc(doc(firestore, "users", user.email)).then((docUserData) => {
                 setUserData({
-                    isVerified: docUserData.data().isVerified,
-                    isAdmin: docUserData.data().isAdmin,
-                    email: docUserData.data().email
+                    IsVerified: docUserData.data().IsVerified,
+                    IsAdmin: docUserData.data().IsAdmin,
+                    Email: docUserData.data().email,
+                    FirstName: docUserData.data().FirstName,
+                    LastName: docUserData.data().LastName
                 });
                 unsubscribe = true;
-                console.log("useUserData: " + docUserData.data().email + "  isAdmin: " + docUserData.data().isAdmin);
+                console.log("useUserData: " + docUserData.data().email + "  isAdmin: " + docUserData.data().IsAdmin);
             });
         } else {
             setUserData({
@@ -39,7 +41,7 @@ export async function useIsAdmin() {
         const docRef = doc(db, "users", auth.currentUser.uid);
         const docSnapshot = await getDoc(docRef);
         console.log("useisadmin: " + auth.currentUser.email);
-        return docSnapshot.data().isAdmin;
+        return docSnapshot.data().IsAdmin;
     }
     return false;
 }

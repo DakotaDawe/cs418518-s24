@@ -15,10 +15,12 @@ const SignupBox = () => {
 			const db = firestore;
 			const docRef = doc(db, "users", auth.currentUser.email);
 			await setDoc(docRef, {
-				uid: auth.currentUser.uid,
-				email: email,
-				isAdmin: false,
-				isVerified: false
+				Uid: auth.currentUser.uid,
+				Email: email,
+				IsAdmin: false,
+				IsVerified: false,
+				FirstName: "",
+                LastName: ""
 			}).then(() => {
 				auth.currentUser.disa
 				signOut(auth);

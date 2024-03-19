@@ -26,12 +26,12 @@ const SigninBox = () => {
 			let foundEntry = false;
 			for (let i = 0; i < foundDocs.length; i++) {
 				const foundDoc = foundDocs[i];
-				if (foundDoc.data().email == email) {
+				if (foundDoc.data().Email == email) {
 					foundEntry = true;
-					if (foundDoc.data().isAdmin) {
+					if (foundDoc.data().IsAdmin) {
 						return canSignInResult.Admin;
 					}
-					if (foundDoc.data().isVerified) {
+					if (foundDoc.data().IsVerified) {
 						return canSignInResult.Verified;
 					}
 				}

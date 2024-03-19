@@ -17,13 +17,17 @@ export function NavigationEvents() {
         console.log("NavigationEvents: pathname: " + pathname + " searchParams: " + searchParams);
         switch (pathname) {
             case '/userHome':
-                if (!user || !userData.isVerified) {
-                    console.log("ROUTER: " + user + " USER DATA: " + JSON.stringify(userData));
+                if (!user || !userData.IsVerified) {
                     router.push('/');
                 }
                 break;
             case '/adminVerifyUsers':
-                if (!user || (!userData.isAdmin && !userData.isVerified)) {
+                if (!user || (!userData.IsAdmin && !userData.IsVerified)) {
+                    router.push('/');
+                }
+                break;
+            case '/changeUserInformation':
+                if (!user || (!userData.IsAdmin && !userData.IsVerified)) {
                     router.push('/');
                 }
                 break;

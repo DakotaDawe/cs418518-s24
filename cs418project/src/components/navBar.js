@@ -17,7 +17,7 @@ const NavBar = () => {
                         user ?
                             <>
                                 {
-                                    userData.isAdmin ?
+                                    userData.IsAdmin ?
                                         <>
                                             <li><Link href="/adminVerifyUsers">Admin Panel</Link></li>
                                         </>
